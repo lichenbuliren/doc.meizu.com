@@ -11,6 +11,7 @@
     "koa": "^0.20.0",
     "koa-body": "^1.2.1",
     "koa-logger": "^1.2.2",
+    "koa-request": "^1.0.0",
     "koa-router": "^5.0.1",
     "koa-session": "^3.2.0",
     "koa-static": "^1.4.9",

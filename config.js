@@ -1,3 +1,4 @@
+var uri = 'http://doc-api.meizu.com:4000';
 module.exports = {
     dev: {
         db: 'apidoc',
@@ -6,5 +7,8 @@ module.exports = {
     },
     pro:{
 
+    },
+    services:{
+        login: uri + '/login'
     }
 }

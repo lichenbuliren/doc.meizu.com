@@ -2,6 +2,8 @@ var render = require('../lib/render');
 var session = require('koa-session');
 var bodyParse = require('koa-body')();
 var Admin = require('../models/Admin');
+var request = require('koa-request');
+var config = require('../config');
 var router = require('koa-router')({
     prefix: '/admin'
 });
@@ -22,17 +24,25 @@ module.exports = function(app) {
         });
     }).post('/login', bodyParse, function*(next) {
         var data = this.request.body,
-            admin;
+            resp,
+            admin,
+            captcha;
 
         // 验证验证码是否正确
         // 验证邮箱和密码是否正确
         // 发送http请求
         try {
-            admin = yield Admin.findOne({
-                'email': data.email,
-                'password': data.password
-            }).exec();
-
+            // admin = yield Admin.findOne({
+            //     'email': data.email,
+            //     'password': data.password
+            // }).exec();
+            // TODO 校验验证码
+            resp = yield request.post({
+                url:config.services.login,
+                body:data,
+                json:true
+            });
+            console.log(resp.body);
         } catch (err) {
             this.body = yield render('/exception.html', {
                 title: '出错了！',
@@ -40,9 +50,9 @@ module.exports = function(app) {
             });
         }
 
-        if (admin) {
+        if (resp) {
             // TODO 登录成功，设置cookie
-            this.session.meizuapidoc = admin;
+            // this.session.meizuapidoc = resp;
             this.redirect('/admin');
         } else {
             router.redirect('/admin/login');

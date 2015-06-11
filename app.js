@@ -20,4 +20,8 @@ app.use(staticServer(path.join(__dirname, 'public')));
 // 自定义路由
 routers(app);
 
+app.on('error',function(err){
+    console.log(err);
+})
+
 app.listen(3000);
