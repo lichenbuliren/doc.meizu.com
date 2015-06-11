@@ -1,0 +1,30 @@
+<div class="panel panel-default sidebar-panel">
+    <div class="panel-heading">项目管理</div>
+    <button type="button" data-url="/admin/project/add" class="btn btn-primary btn-add-project" rel="popup">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加项目
+    </button>
+    <ul class="nav nav-pills nav-stacked">
+        <li role="presentation" class="active menu">
+            <a href="#">这是项目1</a>
+            <ul class="nav nav-pills nav-stacked">
+                <li>
+                    <a href="#">这是模块1</a>
+                    <ul class="nav nav-pills nav-stacked">
+                        <li><a href="/project/module1/apiname">这是接口1</a></li>
+                        <li><a href="/project/module1/apiname">这是接口2</a></li>
+                        <li><a href="/project/module1/apiname">这是接口3</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">这是模块2</a></li>
+                <li><a href="#">这是模块3</a></li>
+            </ul>
+        </li>
+        <li role="presentation" class="menu"><a href="#">这是项目2</a></li>
+        <li role="presentation" class="menu no-border"><a href="#">这是项目3</a></li>
+    </ul>
+</div>
+
+<% projects.forEach(function(project){%>
+
+
+<% })%>
