@@ -9,14 +9,15 @@ var session = require('koa-session');
 var config = require('./config');
 var app = koa();
 
+// 设置在logger前面，可以过滤掉静态资源的日志
+app.use(staticServer(path.join(__dirname, 'public')));
+
 app.use(logger());
 app.keys = ['MEIZUAPIDOC'];
 app.use(session({
     key: 'meizuapidoc',
     maxAge: 24*60*60*1000
 },app));
-app.use(staticServer(path.join(__dirname, 'public')));
-// app.use(bodyParser());
 // 自定义路由
 routers(app);
 

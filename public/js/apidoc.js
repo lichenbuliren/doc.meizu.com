@@ -14,7 +14,9 @@
             });
 
             // 点击弹窗
-
+            $('body').on('click','[rel="popup"]',function(){
+                layer.alert("popup");
+            });
         }
     }
 

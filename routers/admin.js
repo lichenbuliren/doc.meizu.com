@@ -1,67 +1,70 @@
 var render = require('../lib/render');
-var session = require('koa-session');
 var bodyParse = require('koa-body')();
-var Admin = require('../models/Admin');
-var request = require('koa-request');
-var config = require('../config');
+var Api = require('../api');
 var router = require('koa-router')({
     prefix: '/admin'
 });
 
 module.exports = function(app) {
 
+    // 管理员首页
     router.get('/', checkLogin, function*(next) {
-        var projects = [];
-        var admin = this.session.meizuapidoc;
-        this.body = yield render('/admin/index', {
-            title: '文档管理系统',
-            projects: projects,
-            admin: this.session.meizuapidoc
-        });
-    }).get('/login', checkNotLogin, function*(next) {
+        var admin = this.session.meizuapidoc,
+            resp,
+            respBody;
+
+        // TODO 获取项目文档数据集合
+        resp = yield Api.queryProjects();
+
+        respBody = JSON.parse(resp.body);
+        if (respBody.error_code == 200) {
+            this.body = yield render('/admin/index', {
+                title: '文档管理系统',
+                projects: respBody.data || [],
+                admin: admin
+            });
+        }else{
+            this.body = respBody;
+        }
+    });
+
+    // 管理员登录
+    router.get('/login', checkNotLogin, function*(next) {
         this.body = yield render('/admin/login', {
             title: '管理员登录'
         });
-    }).post('/login', bodyParse, function*(next) {
+    });
+
+    router.post('/login', bodyParse, function*(next) {
         var data = this.request.body,
-            resp,
-            admin,
-            captcha;
+            resp;
 
         // 验证验证码是否正确
         // 验证邮箱和密码是否正确
         // 发送http请求
-        try {
-            // admin = yield Admin.findOne({
-            //     'email': data.email,
-            //     'password': data.password
-            // }).exec();
-            // TODO 校验验证码
-            resp = yield request.post({
-                url:config.services.login,
-                body:data,
-                json:true
-            });
-            console.log(resp.body);
-        } catch (err) {
-            this.body = yield render('/exception.html', {
-                title: '出错了！',
-                message: err
-            });
-        }
+        resp = yield Api.login(data);
 
-        if (resp) {
+        // 这里记得要用JSON转化一下，
+        var respBody = JSON.parse(resp.body);
+        if (respBody.error_code == 200) {
             // TODO 登录成功，设置cookie
-            // this.session.meizuapidoc = resp;
+            this.session.meizuapidoc = respBody.data;
             this.redirect('/admin');
         } else {
-            router.redirect('/admin/login');
+            this.redirect('/admin/login');
         }
+    });
+
+    // 添加项目
+    router.get('/project',checkLogin,function*(next){
+        this.body = yield render('/admin/project/index', {
+            title: '管理员登录',
+            admin: this.session.meizuapidoc
+        });
     });
 
     function* checkLogin() {
         if (!this.session.meizuapidoc) {
-            console.log(this.session.meizuapidoc);
             return this.redirect('/admin/login');
         }
         yield arguments[arguments.length - 1];

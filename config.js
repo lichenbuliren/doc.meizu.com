@@ -9,6 +9,7 @@ module.exports = {
 
     },
     services:{
-        login: uri + '/login'
+        login: uri + '/login',
+        projects: uri + '/projects'
     }
 }
