@@ -12,11 +12,6 @@
                     _src = $img.data('src');
                 $img.attr('src',_src + new Date().getTime());
             });
-
-            // 点击弹窗
-            $('body').on('click','[rel="popup"]',function(){
-                layer.alert("popup");
-            });
         }
     }
 

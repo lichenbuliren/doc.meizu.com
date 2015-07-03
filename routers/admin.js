@@ -56,12 +56,23 @@ module.exports = function(app) {
     });
 
     // 添加项目
-    router.get('/project',checkLogin,function*(next){
-        this.body = yield render('/admin/project/index', {
+    router.get('/projects',checkLogin,function*(next){
+        this.body = yield render('/admin/projects/index', {
             title: '管理员登录',
             admin: this.session.meizuapidoc
         });
     });
+
+    router.post('/admin/projects',checkLogin,function*(next){
+        // TODO 提交写入数据库请求
+        var data = this.request.body,
+            resp,
+            respBody;
+        console.log(data);
+        resp = yield Api.postProjects(data);
+        this.status = 302;
+        this.redirect('/');
+    })
 
     function* checkLogin() {
         if (!this.session.meizuapidoc) {

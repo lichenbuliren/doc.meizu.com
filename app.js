@@ -6,7 +6,6 @@ var logger = require('koa-logger');
 var staticServer = require('koa-static');
 var mongoose = require('mongoose');
 var session = require('koa-session');
-var config = require('./config');
 var app = koa();
 
 // 设置在logger前面，可以过滤掉静态资源的日志
